@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetFinder — Поиск питомцев</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ&lang=ru_RU"></script>
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-paw"></i>
+            <span>PetFinder</span>
+        </div>
+
+        <div class="header-center">
+            <button class="btn primary" id="addPetBtn">
+                <i class="fas fa-plus"></i>
+                Разместить объявление
+            </button>
+        </div>
+
+        <div class="header-right">
+            <button class="btn secondary" id="profileBtn">
+                <i class="fas fa-user"></i>
+                Личный кабинет
+            </button>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <div class="main-wrapper">
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="#"><i class="fas fa-search"></i> Поиск</a></li>
+                    <li><a href="#"><i class="fas fa-heart"></i> Избранное</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Сообщения</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Карта -->
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <!-- Таблица лидеров -->
+        <div class="leaderboard">
+            <h3>Топ помощников 🏆</h3>
+            <ol>
+                <li>Иван Петров <span>28</span></li>
+                <li>Анна Сидорова <span>19</span></li>
+                <li>Олег Козлов <span>15</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Бегущая строка -->
+    <div class="ticker">
+        <div class="ticker-content">
+            <div class="ticker-item lost">Потерян кот Барсик (Москва)</div>
+            <div class="ticker-item found">Найдена собака (СПб)</div>
+            <div class="ticker-item lost">Потерян попугай (Казань)</div>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Добавить объявление</h2>
+            <form id="petForm">
+                <!-- Форма остается без изменений -->
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
