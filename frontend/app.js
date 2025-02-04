@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
             zoom: 12, // Масштаб
             controls: ['zoomControl'] // Элементы управления
         });
-
         // Обработчик клика по карте
         map.events.add('click', (e) => {
             selectedCoordinates = e.get('coords');
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <small>Долгота: ${selectedCoordinates[1].toFixed(6)}</small>
             `;
         });
-
         // Первоначальная загрузка данных
         updateContent();
     });
@@ -63,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     zoom: 12,
                     controls: ['zoomControl']
                 });
-
                 // Обработчик клика по карте модального окна
                 modalMap.events.add('click', (e) => {
                     selectedCoordinates = e.get('coords');
@@ -84,13 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 preset: 'islands#redIcon',
                 draggable: true
             });
-
             // Обработчик перемещения маркера
             modalMapMarker.events.add('dragend', (e) => {
                 selectedCoordinates = e.get('target').geometry.getCoordinates();
                 updateCoordinatesInfo(); // Обновляем информацию о координатах
             });
-
             modalMap.geoObjects.add(modalMapMarker); // Добавляем новый маркер
             modalMap.panTo(coords, { flying: true }); // Центрируем карту
         }
@@ -108,12 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обработчик формы
     document.getElementById('petForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-
         if (!selectedCoordinates) {
             alert('Пожалуйста, выберите местоположение на карте!');
             return;
         }
-
         const formData = {
             title: document.getElementById('title').value,
             description: document.getElementById('description').value,
@@ -123,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
             lat: selectedCoordinates[0],
             lon: selectedCoordinates[1]
         };
-
         allPets.push({ ...formData, id: Date.now() }); // Добавляем новое объявление
         updateContent(); // Обновляем контент
         closeModal(); // Закрываем модальное окно
@@ -141,10 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateMap() {
         currentPlacemarks.forEach(pm => map.geoObjects.remove(pm)); // Удаляем старые метки
         currentPlacemarks = [];
-
         // Фильтрация объявлений
         const filteredPets = filterPets();
-
         // Добавление новых меток
         filteredPets.forEach(pet => {
             const placemark = createPlacemark(pet);
@@ -157,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterPets() {
         const type = document.getElementById('filterType').value;
         const status = document.getElementById('filterStatus').value;
-
         return allPets.filter(pet => {
             return (type === 'all' || pet.type === type) &&
                    (status === 'all' || pet.status === status);
@@ -177,10 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `
         }, {
-            iconLayout: 'default#image',
-            iconImageHref: getIcon(pet.type),
-            iconImageSize: [40, 40],
-            iconImageOffset: [-20, -40]
+            preset: 'islands#icon',
+            iconColor: pet.status === 'lost' ? '#ff4d4d' : '#4CAF50'
         });
     }
 
@@ -188,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateTicker() {
         const tickerContent = document.querySelector('.ticker-content');
         tickerContent.innerHTML = '';
-
         allPets.forEach(pet => {
             const item = document.createElement('div');
             item.className = `ticker-item ${pet.status}`;
@@ -196,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${pet.photo}" alt="${pet.title}">
                 <span>${pet.title}</span>
             `;
-
             // Взаимодействие с тикером
             item.addEventListener('click', () => {
                 if (map) {
@@ -209,19 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('mouseleave', () => {
                 tickerContent.style.animationPlayState = 'running';
             });
-
             tickerContent.appendChild(item);
         });
-    }
-
-    // Получение иконки для типа животного
-    function getIcon(type) {
-        const icons = {
-            cat: 'https://img.icons8.com/color/48/cat.png',
-            dog: 'https://img.icons8.com/color/48/dog.png',
-            other: 'https://img.icons8.com/color/48/pets.png'
-        };
-        return icons[type] || icons.other;
     }
 
     // Чтение файла изображения
@@ -254,6 +228,50 @@ document.addEventListener('DOMContentLoaded', () => {
             lat: 55.758163,
             lon: 37.616488,
             photo: "https://placedog.net/60/60"
+        },
+        {
+            id: 3,
+            title: "Потерян попугай Кеша",
+            description: "Говорящий попугай, красно-зеленый",
+            type: "other",
+            status: "lost",
+            lat: 55.761574,
+            lon: 37.583856,
+            photo: "https://via.placeholder.com/60x60"
+        },
+        {
+            id: 4,
+            title: "Найден котёнок",
+            description: "Белый котёнок, без ошейника",
+            type: "cat",
+            status: "found",
+            lat: 55.741574,
+            lon: 37.563856,
+            photo: "https://placekitten.com/60/60"
+        },
+        {
+            id: 5,
+            title: "Потерян щенок",
+            description: "Маленький щенок, коричневый",
+            type: "dog",
+            status: "lost",
+            lat: 55.771574,
+            lon: 37.593856,
+            photo: "https://placedog.net/60/60"
+        },
+        {
+            id: 6,
+            title: "Найден хомяк",
+            description: "Маленький хомячок, серый",
+            type: "other",
+            status: "found",
+            lat: 55.731574,
+            lon: 37.553856,
+            photo: "https://via.placeholder.com/60x60"
         }
     ];
+
+    // Добавляем обработчики для фильтров
+    document.getElementById('filterType').addEventListener('change', updateContent);
+    document.getElementById('filterStatus').addEventListener('change', updateContent);
 });
