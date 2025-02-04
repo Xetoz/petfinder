@@ -2,138 +2,137 @@
 
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PetFinder — Поиск питомцев</title>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<script src="https://api-maps.yandex.ru/2.1/?apikey=ed521305-2fcf-4947-9def-88b47cc3eed0&lang=ru_RU"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetFinder — Поиск питомцев</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ed521305-2fcf-4947-9def-88b47cc3eed0&lang=ru_RU"></script>
 </head>
 <body>
-    <!-- Хедер -->
-    <header class="header">
-        <div class="logo">
-            <i class="fas fa-paw"></i>
-            <span>PetFinder</span>
+<!-- Хедер -->
+<header class="header">
+    <div class="logo">
+        <i class="fas fa-paw"></i>
+        <span>PetFinder</span>
+    </div>
+
+    <div class="header-center">
+        <button class="btn primary" id="addPetBtn">
+            <i class="fas fa-plus"></i>
+            Разместить объявление
+        </button>
+    </div>
+
+    <div class="header-right">
+        <button class="btn secondary" id="profileBtn">
+            <i class="fas fa-user"></i>
+            Личный кабинет
+        </button>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<div class="main-wrapper">
+    <!-- Сайдбар слева -->
+    <aside class="sidebar">
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Главная</a></li>
+                <li><a href="#"><i class="fas fa-search"></i> Поиск</a></li>
+                <li><a href="#"><i class="fas fa-heart"></i> Избранное</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Сообщения</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Основная область -->
+    <div class="main-content">
+        <!-- Фильтры -->
+        <div class="filters">
+            <select id="filterType">
+                <option value="all">Все животные</option>
+                <option value="cat">Кошки</option>
+                <option value="dog">Собаки</option>
+                <option value="other">Другие</option>
+            </select>
+
+            <select id="filterStatus">
+                <option value="all">Все статусы</option>
+                <option value="lost">Потерян</option>
+                <option value="found">Найден</option>
+            </select>
         </div>
 
-        <div class="header-center">
-            <button class="btn primary" id="addPetBtn">
-                <i class="fas fa-plus"></i>
-                Разместить объявление
-            </button>
+        <!-- Карта -->
+        <div class="map-container">
+            <div id="map"></div>
         </div>
+    </div>
 
-        <div class="header-right">
-            <button class="btn secondary" id="profileBtn">
-                <i class="fas fa-user"></i>
-                Личный кабинет
-            </button>
+    <!-- Панель справа -->
+    <aside class="right-panel">
+        <div class="leaderboard">
+            <h3>Топ помощников 🏆</h3>
+            <ol>
+                <li>Иван Петров <span>28</span></li>
+                <li>Анна Сидорова <span>19</span></li>
+                <li>Олег Козлов <span>15</span></li>
+            </ol>
         </div>
-    </header>
+    </aside>
+</div>
 
-    <!-- Основной контент -->
-    <div class="main-wrapper">
-        <!-- Сайдбар слева -->
-        <aside class="sidebar">
-            <nav>
-                <ul>
-                    <li><a href="#"><i class="fas fa-home"></i> Главная</a></li>
-                    <li><a href="#"><i class="fas fa-search"></i> Поиск</a></li>
-                    <li><a href="#"><i class="fas fa-heart"></i> Избранное</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> Сообщения</a></li>
-                </ul>
-            </nav>
-        </aside>
+<!-- Бегущая строка -->
+<div class="ticker">
+    <div class="ticker-content">
+        <!-- Сюда добавляются элементы через JS -->
+    </div>
+</div>
 
-        <!-- Основная область -->
-        <div class="main-content">
-            <!-- Фильтры -->
-            <div class="filters">
-                <select id="filterType">
-                    <option value="all">Все животные</option>
-                    <option value="cat">Кошки</option>
-                    <option value="dog">Собаки</option>
-                    <option value="other">Другие</option>
+<!-- Модальное окно -->
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Добавить объявление</h2>
+        <form id="petForm">
+            <div class="form-group">
+                <label>Заголовок</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Тип животного</label>
+                <select id="type" required>
+                    <option value="cat">Кошка</option>
+                    <option value="dog">Собака</option>
+                    <option value="other">Другое</option>
                 </select>
-
-                <select id="filterStatus">
-                    <option value="all">Все статусы</option>
+            </div>
+            <div class="form-group">
+                <label>Статус</label>
+                <select id="status" required>
                     <option value="lost">Потерян</option>
                     <option value="found">Найден</option>
                 </select>
             </div>
-
-            <!-- Карта -->
-            <div class="map-container">
-                <div id="map"></div>
+            <div class="form-group">
+                <label>Фото</label>
+                <input type="file" id="photo" accept="image/*" required>
             </div>
-        </div>
-
-        <!-- Панель справа -->
-        <aside class="right-panel">
-            <div class="leaderboard">
-                <h3>Топ помощников 🏆</h3>
-                <ol>
-                    <li>Иван Петров <span>28</span></li>
-                    <li>Анна Сидорова <span>19</span></li>
-                    <li>Олег Козлов <span>15</span></li>
-                </ol>
+            <div class="form-group">
+                <label>Местоположение</label>
+                <div id="modalMap" style="height: 300px; border-radius: 8px; margin: 10px 0;"></div>
+                <div id="coordinatesInfo" class="coordinates-info"></div>
             </div>
-        </aside>
+            <button type="submit" class="btn primary">Опубликовать</button>
+        </form>
     </div>
+</div>
 
-    <!-- Бегущая строка -->
-    <div class="ticker">
-        <div class="ticker-content">
-            <!-- Сюда добавляются элементы через JS -->
-        </div>
-    </div>
-
-    <!-- Модальное окно -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Добавить объявление</h2>
-            <form id="petForm">
-                <div class="form-group">
-                    <label>Заголовок</label>
-                    <input type="text" id="title" required>
-                </div>
-                <div class="form-group">
-                    <label>Описание</label>
-                    <textarea id="description" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Тип животного</label>
-                    <select id="type" required>
-                        <option value="cat">Кошка</option>
-                        <option value="dog">Собака</option>
-                        <option value="other">Другое</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Статус</label>
-                    <select id="status" required>
-                        <option value="lost">Потерян</option>
-                        <option value="found">Найден</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Фото</label>
-                    <input type="file" id="photo" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label>Местоположение</label>
-                    <div id="locationPicker" class="location-picker">
-                        <p>Кликните на карте чтобы выбрать место</p>
-                    </div>
-                </div>
-                <button type="submit" class="btn primary">Опубликовать</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

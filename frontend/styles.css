@@ -308,4 +308,16 @@ input, textarea, select {
         padding: 0.4rem 1rem;
     }
 }
+#modalMap {
+    width: 100%;
+    box-shadow: var(--shadow);
+}
 
+.coordinates-info {
+    margin-top: 10px;
+    padding: 8px;
+    background: var(--background);
+    border-radius: var(--border-radius);
+    font-size: 0.9em;
+    color: #666;
+}
