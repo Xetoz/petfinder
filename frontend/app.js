@@ -201,7 +201,7 @@ function createPlacemark(pet) {
                 <img src="${pet.photo}" alt="${pet.title}">
                 <span>${pet.title}</span>
             `;
-            // Взаимодействие с тикером
+    // Взаимодействие с тикером
     item.addEventListener('click', () => {
         if (map) {
             clearFilters();
@@ -287,7 +287,7 @@ function createPlacemark(pet) {
         },
         {
             id: 5,
-            title: "Потерян щенок",
+            title: "Потерян щенок1",
             description: "Маленький щенок, коричневый",
             type: "dog",
             status: "lost",
