@@ -154,23 +154,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Создание метки на карте
-    function createPlacemark(pet) {
-        return new ymaps.Placemark([pet.lat, pet.lon], {
-            hintContent: pet.title,
-            balloonContent: `
-                <div class="balloon">
-                    <img src="${pet.photo}" alt="${pet.title}" style="width:100px;height:100px;object-fit:cover">
-                    <h3>${pet.title}</h3>
-                    <p>${pet.description}</p>
-                    <p>Статус: ${pet.status === 'lost' ? 'Потерян' : 'Найден'}</p>
-                </div>
-            `
-        }, {
-            preset: 'islands#icon',
-            iconColor: pet.status === 'lost' ? '#ff4d4d' : '#4CAF50'
-        });
+    // Создание метки на карте
+function createPlacemark(pet) {
+    // Определение иконки в зависимости от типа животного
+    let iconHref;
+    if (pet.type === 'cat') {
+        iconHref = '/petfinder/static/icons/cat_icon.png'; // Относительный путь к иконке для котов
+    } else if (pet.type === 'dog') {
+        iconHref = '/petfinder/static/icons/dog_icon.png'; // Относительный путь к иконке для собак
+    } else {
+        iconHref = '/petfinder/static/icons/animal_icon.png'; // Общий относительный путь для других животных
     }
 
+    return new ymaps.Placemark([pet.lat, pet.lon], {
+        hintContent: pet.title,
+        balloonContent: `
+            <div style="text-align: center;">
+                <img src="${pet.photo}" alt="${pet.title}" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px;" />
+                <h4>${pet.title}</h4>
+                <p>${pet.description}</p>
+                <p><strong>Статус:</strong> ${pet.status === 'lost' ? 'Потерян' : 'Найден'}</p>
+            </div>
+        `
+    }, {
+        // Настройка внешнего вида метки
+        iconLayout: 'default#imageWithContent',
+        iconImageHref: iconHref, // Установка выбранной иконки
+        iconImageSize: [30, 30], // Размер иконки
+        iconImageOffset: [-20, -40] // Отступ для центрирования
+    });
+}
+    // Сброс фильтров
+    function clearFilters() {
+        document.getElementById('filterType').value = 'all'; // Сбрасываем тип животного
+        document.getElementById('filterStatus').value = 'all'; // Сбрасываем статус
+        updateContent(); // Обновляем контент после сброса фильтров
+    }
     // Обновление тикера
     function updateTicker() {
         const tickerContent = document.querySelector('.ticker-content');
@@ -183,11 +202,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>${pet.title}</span>
             `;
             // Взаимодействие с тикером
-            item.addEventListener('click', () => {
-                if (map) {
-                    map.panTo([pet.lat, pet.lon], { flying: true });
+    item.addEventListener('click', () => {
+        if (map) {
+            clearFilters();
+            // Используем цепочку промисов для контроля порядка выполнения
+            map.panTo([pet.lat, pet.lon], { flying: true })
+                .then(() => map.setZoom(16, { checkZoomRange: true }))
+                .then(() => {
+                    const placemark = currentPlacemarks.find(pm => {
+                    const coords = pm.geometry.getCoordinates();
+                    return coords[0] === pet.lat && coords[1] === pet.lon;
+                });
+                if (placemark) {
+                    // Отключаем авто-сдвиг карты при открытии балуна
+                    placemark.options.set('balloonAutoPan', false);
+                    placemark.balloon.open();
+                    // Дополнительная центровка для гарантии
+                    map.setCenter([pet.lat, pet.lon]);
                 }
-            });
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    });
             item.addEventListener('mouseenter', () => {
                 tickerContent.style.animationPlayState = 'paused';
             });
@@ -217,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "lost",
             lat: 55.751574,
             lon: 37.573856,
-            photo: "https://placekitten.com/60/60"
+            photo: "/petfinder/static/cat1.png"
         },
         {
             id: 2,
@@ -227,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "found",
             lat: 55.758163,
             lon: 37.616488,
-            photo: "https://placedog.net/60/60"
+            photo: "/petfinder/static/dog1.png"
         },
         {
             id: 3,
@@ -237,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "lost",
             lat: 55.761574,
             lon: 37.583856,
-            photo: "https://via.placeholder.com/60x60"
+            photo: "/petfinder/static/parrot.png"
         },
         {
             id: 4,
@@ -247,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "found",
             lat: 55.741574,
             lon: 37.563856,
-            photo: "https://placekitten.com/60/60"
+            photo: "/petfinder/static/cat2.png"
         },
         {
             id: 5,
@@ -257,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "lost",
             lat: 55.771574,
             lon: 37.593856,
-            photo: "https://placedog.net/60/60"
+            photo: "/petfinder/static/dog3.png"
         },
         {
             id: 6,
@@ -267,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "found",
             lat: 55.731574,
             lon: 37.553856,
-            photo: "https://via.placeholder.com/60x60"
+            photo: "/petfinder/static/hamster1.png"
         }
     ];
 
