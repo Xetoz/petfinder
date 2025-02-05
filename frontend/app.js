@@ -287,7 +287,7 @@ function createPlacemark(pet) {
         },
         {
             id: 5,
-            title: "Потерян щенок1",
+            title: "Потерян щенок",
             description: "Маленький щенок, коричневый",
             type: "dog",
             status: "lost",
